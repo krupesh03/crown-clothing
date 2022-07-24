@@ -54,10 +54,12 @@ class SignUp extends React.Component {
                 });
                 //console.log(this.state);
             }).catch((error) => {
-                console.error(error);
+                console.error(error.message);
+                alert(error.message);
             })
         } catch( error ) {
-            console.error(error);
+            console.error(error.message);
+            alert(error.message);
         }
     }
 
