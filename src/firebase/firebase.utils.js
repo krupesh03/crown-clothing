@@ -3,7 +3,7 @@
  */
 import { initializeApp } from 'firebase/app';
 import { getFirestore, doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, createUserWithEmailAndPassword } from "firebase/auth";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -55,5 +55,7 @@ export const signInWithGoogle = () => signInWithPopup(auth, provider);
 export const GooglesignOut = () => signOut(auth);
 
 export const onSnapshotDoc = (docRef, doc) => onSnapshot(docRef, doc);
+
+export const createGoogleUserWithEmailAndPassword = (auth, email, password) => createUserWithEmailAndPassword(auth, email, password);
 
 export default app;
