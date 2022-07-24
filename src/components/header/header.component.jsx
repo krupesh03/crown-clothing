@@ -2,8 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './header.styles.scss';
 import { ReactComponent as Logo } from '../../assets/crown.svg';
+import { GooglesignOut } from '../../firebase/firebase.utils';
 
-function Header() {
+function Header({ currentUser }) {
 
     return (
         <div className="header">
@@ -17,6 +18,11 @@ function Header() {
                 <Link className="option" to="/">
                     CONTACT
                 </Link>
+                {
+                    currentUser ? 
+                        ( <div className="option" onClick={ GooglesignOut }> SIGN OUT</div> )
+                    : ( <Link className="option" to="/signin"> SIGN IN</Link> )
+                }
             </div>
         </div>
     );
