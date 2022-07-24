@@ -2,7 +2,7 @@
  * Web version 9 (modular)
  */
 import { initializeApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 
 // Your web app's Firebase configuration
@@ -22,10 +22,38 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth();
 export const firestore = getFirestore(app);
 
+export const createUserProfileDocument = async ( userAuth, additionalData ) => {
+
+    if( !userAuth ) return;
+
+    const UserRef = doc(firestore, `users/${userAuth.uid}`);
+    const snapShot = await getDoc(UserRef);
+    //console.log(snapShot);
+    if( !snapShot.exists() ) {
+        const { displayName, email } = userAuth;
+        const createdAt = new Date();
+
+        try {
+            await setDoc(UserRef, { //always set data in userRef
+                displayName,
+                email,
+                createdAt,
+                ...additionalData
+            });
+        } catch( error ) {
+            console.log(`error creating user ${error.message}`);
+        }
+    } 
+
+    return UserRef;
+};
+
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({ prompt : 'select_account' });
 export const signInWithGoogle = () => signInWithPopup(auth, provider);
 
 export const GooglesignOut = () => signOut(auth);
+
+export const onSnapshotDoc = (docRef, doc) => onSnapshot(docRef, doc);
 
 export default app;

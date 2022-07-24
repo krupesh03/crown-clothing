@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import './header.styles.scss';
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 import { GooglesignOut } from '../../firebase/firebase.utils';
+//import { auth } from '../../firebase/firebase-old-version.utils';
 
 function Header({ currentUser }) {
 
@@ -21,6 +22,7 @@ function Header({ currentUser }) {
                 {
                     currentUser ? 
                         ( <div className="option" onClick={ GooglesignOut }> SIGN OUT</div> )
+                        // ( <div className="option" onClick={ auth.signOut() }> SIGN OUT</div> )
                     : ( <Link className="option" to="/signin"> SIGN IN</Link> )
                 }
             </div>

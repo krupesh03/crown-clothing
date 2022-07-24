@@ -6,7 +6,8 @@ import Header from './components/header/header.component';
 import SignInAndSignUp from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 import React from 'react';
 //import React, { useState, useEffect } from 'react';
-import { auth } from './firebase/firebase.utils';
+import { auth, createUserProfileDocument, onSnapshotDoc } from './firebase/firebase.utils';
+//import { auth, createUserProfileDocument } from './firebase/firebase-old-version.utils';
 
 class App extends React.Component {
 
@@ -23,9 +24,42 @@ class App extends React.Component {
 
   componentDidMount() {
 
-    this.unsubcribeFromAuth = auth.onAuthStateChanged( (user) => {
-      this.setState({currentUser: user});
-      console.log(user);
+    this.unsubcribeFromAuth = auth.onAuthStateChanged( async (userAuth) => {
+      // this.setState({currentUser: user});
+      // console.log(user);
+      if( userAuth ) {
+        const UserRef  = await createUserProfileDocument(userAuth);
+        //console.log(UserRef);
+        /**
+         * webversion 8 (namespaced)
+         */
+        // UserRef.onSnapshot( (snapShot) => {
+        //   //console.log(snapShot.data());
+        //   this.setState({
+        //     currentUser: {
+        //       id : snapShot.id,
+        //       ...snapShot.data()
+        //     }
+        //   }, () => {
+        //     console.log(this.state);
+        //   });
+        // });
+
+        /**
+         * Web version 9 (modular)
+         */
+         onSnapshotDoc(UserRef, (snapShot) => {
+          //console.log(snapShot.data());
+          this.setState({
+            currentUser: {
+              id: snapShot.id,
+              ...snapShot.data()
+            }
+          });
+        })
+      } else {
+        this.setState({ currentUser: null })
+      }
     });
   }
 
