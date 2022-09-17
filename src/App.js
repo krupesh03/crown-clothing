@@ -1,28 +1,35 @@
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import HomePage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
 import Header from './components/header/header.component';
 import SignInAndSignUp from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
-import React from 'react';
 //import React, { useState, useEffect } from 'react';
 import { auth, createUserProfileDocument, onSnapshotDoc } from './firebase/firebase.utils';
 //import { auth, createUserProfileDocument } from './firebase/firebase-old-version.utils';
+import { connect } from 'react-redux';
+import { setCurrentUser } from './redux/user/user.actions';
 
 class App extends React.Component {
 
-  constructor() {
+  /**
+   * below constructor not needed because we are using reducer for currentUser as setCurrentUser
+   */
+  /*constructor() {
     super();
 
     this.state = {
       currentUser: null
     }
     
-  }
+  }*/
 
   unsubcribeFromAuth = null;
 
   componentDidMount() {
+
+    const { setCurrentUser } = this.props;
 
     this.unsubcribeFromAuth = auth.onAuthStateChanged( async (userAuth) => {
       // this.setState({currentUser: user});
@@ -50,15 +57,20 @@ class App extends React.Component {
          */
          onSnapshotDoc(UserRef, (snapShot) => {
           //console.log(snapShot.data());
-          this.setState({
-            currentUser: {
-              id: snapShot.id,
+          // this.setState({
+          //   currentUser: {
+          //     id: snapShot.id,
+          //     ...snapShot.data()
+          //   }
+          // });
+          setCurrentUser({
+            id: snapShot.id,
               ...snapShot.data()
-            }
-          });
+          })
         })
       } else {
-        this.setState({ currentUser: null })
+        //this.setState({ currentUser: null })
+        setCurrentUser(null);
       }
     });
   }
@@ -72,7 +84,7 @@ class App extends React.Component {
     return (
       <div>
         <Router>
-          <Header currentUser={ this.state.currentUser } />
+          <Header />
           <Routes>
             <Route exact path='/' element={<HomePage />} />
             <Route path='/shop' element={ <ShopPage /> } />
@@ -111,4 +123,8 @@ class App extends React.Component {
 //   );
 // }
 
-export default App;
+const mapDispatchToProps = (dispatch) => ({
+  setCurrentUser : user => dispatch(setCurrentUser(user)) //used reducer over here
+})
+
+export default connect(null, mapDispatchToProps)(App);

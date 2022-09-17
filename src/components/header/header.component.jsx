@@ -4,6 +4,7 @@ import './header.styles.scss';
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 import { GooglesignOut } from '../../firebase/firebase.utils';
 //import { auth } from '../../firebase/firebase-old-version.utils';
+import { connect } from 'react-redux';
 
 function Header({ currentUser }) {
 
@@ -30,4 +31,8 @@ function Header({ currentUser }) {
     );
 }
 
-export default Header;
+const mapStateToProps = (state) => ({
+    currentUser: state.user.currentUser //used reducer over here
+})
+
+export default connect(mapStateToProps)(Header);
