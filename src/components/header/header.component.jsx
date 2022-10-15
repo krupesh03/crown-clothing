@@ -6,8 +6,9 @@ import { GooglesignOut } from '../../firebase/firebase.utils';
 //import { auth } from '../../firebase/firebase-old-version.utils';
 import { connect } from 'react-redux';
 import CartIcon from '../cart-icon/cart-icon.component';
+import CartDropdown from '../cart-dropdown/cart-dropdown.component';
 
-function Header({ currentUser }) {
+function Header({ currentUser, hidden }) {
 
     return (
         <div className="header">
@@ -29,12 +30,18 @@ function Header({ currentUser }) {
                 }
                 <CartIcon />
             </div>
+            { 
+                hidden ? null : 
+                <CartDropdown />
+            }
         </div>
     );
 }
 
-const mapStateToProps = (state) => ({
-    currentUser: state.user.currentUser //used reducer over here
+const mapStateToProps = ({ user : {currentUser}, cart: {hidden} }) => ({
+    //currentUser: state.user.currentUser //used reducer over here
+    currentUser, //used reducer over here
+    hidden
 })
 
 export default connect(mapStateToProps)(Header);
