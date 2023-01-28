@@ -10,6 +10,8 @@ import { auth, createUserProfileDocument, onSnapshotDoc } from './firebase/fireb
 //import { auth, createUserProfileDocument } from './firebase/firebase-old-version.utils';
 import { connect } from 'react-redux';
 import { setCurrentUser } from './redux/user/user.actions';
+import { selectCurrentUser } from './redux/user/user.selectors';
+import { createStructuredSelector } from 'reselect';
 
 class App extends React.Component {
 
@@ -123,8 +125,11 @@ class App extends React.Component {
 //   );
 // }
 
-const mapStateToProps = ({user}) => ({
-  currentUser : user.currentUser //used reducer over here
+// const mapStateToProps = ({user}) => ({
+//   currentUser : user.currentUser //used reducer over here
+// });
+const mapStateToProps = createStructuredSelector({
+  currentUser : selectCurrentUser //used reducer over here
 });
 
 const mapDispatchToProps = (dispatch) => ({
